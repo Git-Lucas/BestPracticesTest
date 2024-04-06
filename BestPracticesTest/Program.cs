@@ -14,7 +14,7 @@ builder.Services.AddDbContext<DatabaseContext>(opt =>
 
 builder.Services
     .AddScoped<IWeatherForecastService, WeatherForecastService>()
-    .AddScoped<IWeatherForecastData, WeatherForecastData>();
+    .AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
 
 var app = builder.Build();
 

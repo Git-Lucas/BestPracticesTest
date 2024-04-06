@@ -2,7 +2,7 @@
 
 namespace BestPracticesTest.Data;
 
-public interface IWeatherForecastData
+public interface IWeatherForecastRepository
 {
     Task<int[]> CreateRangeAsync(WeatherForecast[] weatherForecasts);
     Task<IEnumerable<WeatherForecast>> GetAllAsync();

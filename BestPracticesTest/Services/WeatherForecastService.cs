@@ -3,9 +3,9 @@ using BestPracticesTest.Entities;
 
 namespace BestPracticesTest.Services;
 
-public class WeatherForecastService(IWeatherForecastData weatherForecastData) : IWeatherForecastService
+public class WeatherForecastService(IWeatherForecastRepository weatherForecastRepository) : IWeatherForecastService
 {
-    private readonly IWeatherForecastData _weatherForecastData = weatherForecastData;
+    private readonly IWeatherForecastRepository _weatherForecastRepository = weatherForecastRepository;
 
     public async Task<int[]> CreateRangeAsync()
     {
@@ -22,14 +22,14 @@ public class WeatherForecastService(IWeatherForecastData weatherForecastData) : 
         })
             .ToArray();
 
-        int[] idsFromDatabase = await _weatherForecastData.CreateRangeAsync(weatherForecasts);
+        int[] idsFromDatabase = await _weatherForecastRepository.CreateRangeAsync(weatherForecasts);
 
         return idsFromDatabase;
     }
 
     public async Task<IEnumerable<WeatherForecast>> GetAllAsync()
     {
-        IEnumerable<WeatherForecast> weatherForecasts = await _weatherForecastData.GetAllAsync();
+        IEnumerable<WeatherForecast> weatherForecasts = await _weatherForecastRepository.GetAllAsync();
 
         return weatherForecasts;
     }

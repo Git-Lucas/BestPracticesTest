@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BestPracticesTest.Data;
 
-public class WeatherForecastData(DatabaseContext context) : IWeatherForecastData
+public class WeatherForecastRepository(DatabaseContext context) : IWeatherForecastRepository
 {
     private readonly DatabaseContext _context = context;
 
