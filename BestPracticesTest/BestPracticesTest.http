@@ -1,0 +1,6 @@
+@BestPracticesTest_HostAddress = http://localhost:5075
+
+GET {{BestPracticesTest_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
