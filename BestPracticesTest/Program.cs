@@ -1,15 +1,27 @@
+using BestPracticesTest.Data;
+using BestPracticesTest.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<DatabaseContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services
+    .AddScoped<IWeatherForecastService, WeatherForecastService>()
+    .AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+using IServiceScope scope = app.Services.CreateScope();
+DatabaseContext context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+await context.Database.MigrateAsync();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
