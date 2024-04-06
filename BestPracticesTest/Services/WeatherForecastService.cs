@@ -3,9 +3,9 @@ using BestPracticesTest.Entities;
 
 namespace BestPracticesTest.Services;
 
-public class WeatherForecastService(WeatherForecastData weatherForecastData)
+public class WeatherForecastService(IWeatherForecastData weatherForecastData) : IWeatherForecastService
 {
-    private readonly WeatherForecastData _weatherForecastData = weatherForecastData;
+    private readonly IWeatherForecastData _weatherForecastData = weatherForecastData;
 
     public async Task<int[]> CreateRangeAsync()
     {

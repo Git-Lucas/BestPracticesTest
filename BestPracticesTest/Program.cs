@@ -13,8 +13,8 @@ builder.Services.AddDbContext<DatabaseContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services
-    .AddScoped<WeatherForecastService>()
-    .AddScoped<WeatherForecastData>();
+    .AddScoped<IWeatherForecastService, WeatherForecastService>()
+    .AddScoped<IWeatherForecastData, WeatherForecastData>();
 
 var app = builder.Build();
 

@@ -6,9 +6,9 @@ namespace BestPracticesTest.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class WeatherForecastController(WeatherForecastService weatherForecastService) : ControllerBase
+public class WeatherForecastController(IWeatherForecastService weatherForecastService) : ControllerBase
 {
-    private readonly WeatherForecastService _weatherForecastService = weatherForecastService;
+    private readonly IWeatherForecastService _weatherForecastService = weatherForecastService;
 
     [HttpPost]
     [ProducesResponseType(typeof(int[]), StatusCodes.Status200OK)]
