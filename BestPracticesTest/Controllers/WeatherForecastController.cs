@@ -1,31 +1,30 @@
+using BestPracticesTest.Entities;
+using BestPracticesTest.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BestPracticesTest.Controllers;
+
 [ApiController]
 [Route("[controller]")]
-public class WeatherForecastController : ControllerBase
+public class WeatherForecastController(WeatherForecastService weatherForecastService) : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+    private readonly WeatherForecastService _weatherForecastService = weatherForecastService;
 
-    private readonly ILogger<WeatherForecastController> _logger;
-
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    [HttpPost]
+    [ProducesResponseType(typeof(int[]), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CreateAsync()
     {
-        _logger = logger;
+        int[] weatherForecastsIds = await _weatherForecastService.CreateRangeAsync();
+
+        return Created(string.Empty, weatherForecastsIds);
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get()
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<WeatherForecast>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAllAsync()
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
+        IEnumerable<WeatherForecast> weatherForecasts = await _weatherForecastService.GetAllAsync();
+
+        return Ok(weatherForecasts);
     }
 }
