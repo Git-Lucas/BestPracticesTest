@@ -1,11 +1,13 @@
 using BestPracticesTest.Data;
 using BestPracticesTest.Entities;
 using BestPracticesTest.Services;
+using Meziantou.Xunit;
 using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
 
-namespace BestPracticesTest.Test;
+namespace BestPracticesTest.Test.Integration;
 
+[DisableParallelization]
 public class WeatherForecastServiceTests : IAsyncLifetime
 {
     private IWeatherForecastRepository? _weatherForecastRepository;
