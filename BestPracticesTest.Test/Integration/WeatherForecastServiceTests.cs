@@ -1,6 +1,7 @@
 using BestPracticesTest.Data;
 using BestPracticesTest.Entities;
 using BestPracticesTest.Services;
+using BestPracticesTest.UseCases;
 using Meziantou.Xunit;
 using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
@@ -22,9 +23,9 @@ public class WeatherForecastServiceTests : IAsyncLifetime
     [Fact]
     public async Task CreateRangeAsync_Returns5IdsOfWeatherForecastsCreatedFromDatabase()
     {
-        WeatherForecastService weatherForecastService = new(_weatherForecastRepository!);
+        ICreateRangeUseCase createRangeUseCase = new CreateRangeUseCase(_weatherForecastRepository!);
 
-        int[] idsFromDatabase = await weatherForecastService.CreateRangeAsync();
+        int[] idsFromDatabase = await createRangeUseCase.ExecuteAsync();
 
         Assert.Equal(5, idsFromDatabase.Length);
     }
@@ -32,10 +33,11 @@ public class WeatherForecastServiceTests : IAsyncLifetime
     [Fact]
     public async Task GetAllAsync_ReturnsAllCreatedWeatherForecastFromDatabase()
     {
-        WeatherForecastService weatherForecastService = new(_weatherForecastRepository!);
-        int[] idsFromDatabase = await weatherForecastService.CreateRangeAsync();
+        ICreateRangeUseCase createRangeUseCase = new CreateRangeUseCase(_weatherForecastRepository!);
+        int[] idsFromDatabase = await createRangeUseCase.ExecuteAsync();
+        IGetAllUseCase getAllUseCase = new GetAllUseCase(_weatherForecastRepository!);
 
-        IEnumerable<WeatherForecast> weatherForecasts = await weatherForecastService.GetAllAsync();
+        IEnumerable<WeatherForecast> weatherForecasts = await getAllUseCase.ExecuteAsync();
 
         Assert.NotEmpty(idsFromDatabase);
         Assert.Equal(idsFromDatabase.Length, weatherForecasts.Count());
@@ -44,9 +46,9 @@ public class WeatherForecastServiceTests : IAsyncLifetime
     [Fact]
     public async Task GetAllAsync_ReturnsEmptyListOfWeatherForecastFromDatabase()
     {
-        WeatherForecastService weatherForecastService = new(_weatherForecastRepository!);
+        IGetAllUseCase getAllUseCase = new GetAllUseCase(_weatherForecastRepository!);
 
-        IEnumerable<WeatherForecast> weatherForecasts = await weatherForecastService.GetAllAsync();
+        IEnumerable<WeatherForecast> weatherForecasts = await getAllUseCase.ExecuteAsync();
 
         Assert.Empty(weatherForecasts);
     }
