@@ -14,9 +14,10 @@ builder.Services.AddDbContext<DatabaseContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services
+    .AddScoped<IWeatherForecastRepository, WeatherForecastRepository>()
     .AddScoped<IGetAllUseCase, GetAllUseCase>()
     .AddScoped<ICreateRangeUseCase, CreateRangeUseCase>()
-    .AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
+    .AddScoped<ICountUseCase, CountUseCase>();
 
 var app = builder.Build();
 

@@ -20,8 +20,7 @@ public class CreateRangeUseCase(IWeatherForecastRepository weatherForecastReposi
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             TemperatureC = Random.Shared.Next(-20, 55),
             Summary = summaries[Random.Shared.Next(summaries.Length)]
-        })
-            .ToArray();
+        }).ToArray();
 
         int[] idsFromDatabase = await _weatherForecastRepository.CreateRangeAsync(weatherForecasts);
 

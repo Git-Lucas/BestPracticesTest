@@ -5,7 +5,7 @@ using Meziantou.Xunit;
 using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
 
-namespace BestPracticesTest.Test.Integration;
+namespace BestPracticesTest.Test.Integration.UseCases;
 
 [DisableParallelization]
 public class CreateRangeUseCaseTests : IAsyncLifetime

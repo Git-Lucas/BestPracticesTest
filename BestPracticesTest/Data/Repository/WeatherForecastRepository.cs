@@ -7,6 +7,11 @@ public class WeatherForecastRepository(DatabaseContext context) : IWeatherForeca
 {
     private readonly DatabaseContext _context = context;
 
+    public async Task<int> CountAsync()
+    {
+        return await _context.WeatherForecasts.CountAsync();
+    }
+
     public async Task<int[]> CreateRangeAsync(WeatherForecast[] weatherForecasts)
     {
         await _context.WeatherForecasts.AddRangeAsync(weatherForecasts);

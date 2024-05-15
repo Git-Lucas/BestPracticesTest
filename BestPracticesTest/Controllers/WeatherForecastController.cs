@@ -25,4 +25,13 @@ public class WeatherForecastController : ControllerBase
 
         return Ok(weatherForecasts);
     }
+
+    [HttpGet("count")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CountAsync([FromServices] ICountUseCase countUseCase)
+    {
+        int countWeatherForecasts = await countUseCase.ExecuteAsync();
+
+        return Ok(countWeatherForecasts);
+    }
 }
