@@ -1,12 +1,15 @@
 using BestPracticesTest.Data;
 using BestPracticesTest.Entities;
 using BestPracticesTest.Services;
+using BestPracticesTest.UseCases;
+using Meziantou.Xunit;
 using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
 
-namespace BestPracticesTest.Test;
+namespace BestPracticesTest.Test.Integration.UseCases;
 
-public class WeatherForecastServiceTests : IAsyncLifetime
+[DisableParallelization]
+public class GetAllUseCaseTests : IAsyncLifetime
 {
     private IWeatherForecastRepository? _weatherForecastRepository;
 
@@ -18,33 +21,24 @@ public class WeatherForecastServiceTests : IAsyncLifetime
             .Build();
 
     [Fact]
-    public async Task CreateRangeAsync_Returns5IdsOfWeatherForecastsCreatedFromDatabase()
+    public async Task ExecuteAsync_ReturnsAllCreatedWeatherForecastFromDatabase()
     {
-        WeatherForecastService weatherForecastService = new(_weatherForecastRepository!);
+        ICreateRangeUseCase createRangeUseCase = new CreateRangeUseCase(_weatherForecastRepository!);
+        int[] idsFromDatabase = await createRangeUseCase.ExecuteAsync();
+        IGetAllUseCase getAllUseCase = new GetAllUseCase(_weatherForecastRepository!);
 
-        int[] idsFromDatabase = await weatherForecastService.CreateRangeAsync();
-
-        Assert.Equal(5, idsFromDatabase.Length);
-    }
-
-    [Fact]
-    public async Task GetAllAsync_ReturnsAllCreatedWeatherForecastFromDatabase()
-    {
-        WeatherForecastService weatherForecastService = new(_weatherForecastRepository!);
-        int[] idsFromDatabase = await weatherForecastService.CreateRangeAsync();
-
-        IEnumerable<WeatherForecast> weatherForecasts = await weatherForecastService.GetAllAsync();
+        IEnumerable<WeatherForecast> weatherForecasts = await getAllUseCase.ExecuteAsync();
 
         Assert.NotEmpty(idsFromDatabase);
         Assert.Equal(idsFromDatabase.Length, weatherForecasts.Count());
     }
 
     [Fact]
-    public async Task GetAllAsync_ReturnsEmptyListOfWeatherForecastFromDatabase()
+    public async Task ExecuteAsync_ReturnsEmptyListOfWeatherForecastFromDatabase()
     {
-        WeatherForecastService weatherForecastService = new(_weatherForecastRepository!);
+        IGetAllUseCase getAllUseCase = new GetAllUseCase(_weatherForecastRepository!);
 
-        IEnumerable<WeatherForecast> weatherForecasts = await weatherForecastService.GetAllAsync();
+        IEnumerable<WeatherForecast> weatherForecasts = await getAllUseCase.ExecuteAsync();
 
         Assert.Empty(weatherForecasts);
     }

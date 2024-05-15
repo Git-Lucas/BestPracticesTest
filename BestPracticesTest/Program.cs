@@ -1,5 +1,6 @@
 using BestPracticesTest.Data;
 using BestPracticesTest.Services;
+using BestPracticesTest.UseCases;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +14,10 @@ builder.Services.AddDbContext<DatabaseContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services
-    .AddScoped<IWeatherForecastService, WeatherForecastService>()
-    .AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
+    .AddScoped<IWeatherForecastRepository, WeatherForecastRepository>()
+    .AddScoped<IGetAllUseCase, GetAllUseCase>()
+    .AddScoped<ICreateRangeUseCase, CreateRangeUseCase>()
+    .AddScoped<ICountUseCase, CountUseCase>();
 
 var app = builder.Build();
 

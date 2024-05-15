@@ -1,30 +1,37 @@
 using BestPracticesTest.Entities;
-using BestPracticesTest.Services;
+using BestPracticesTest.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BestPracticesTest.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class WeatherForecastController(IWeatherForecastService weatherForecastService) : ControllerBase
+public class WeatherForecastController : ControllerBase
 {
-    private readonly IWeatherForecastService _weatherForecastService = weatherForecastService;
-
     [HttpPost]
     [ProducesResponseType(typeof(int[]), StatusCodes.Status200OK)]
-    public async Task<IActionResult> CreateAsync()
+    public async Task<IActionResult> CreateAsync([FromServices] ICreateRangeUseCase createRangeUseCase)
     {
-        int[] weatherForecastsIds = await _weatherForecastService.CreateRangeAsync();
+        int[] weatherForecastsIds = await createRangeUseCase.ExecuteAsync();
 
         return Created(string.Empty, weatherForecastsIds);
     }
 
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<WeatherForecast>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllAsync()
+    public async Task<IActionResult> GetAllAsync([FromServices] IGetAllUseCase getAllUseCase)
     {
-        IEnumerable<WeatherForecast> weatherForecasts = await _weatherForecastService.GetAllAsync();
+        IEnumerable<WeatherForecast> weatherForecasts = await getAllUseCase.ExecuteAsync();
 
         return Ok(weatherForecasts);
+    }
+
+    [HttpGet("count")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CountAsync([FromServices] ICountUseCase countUseCase)
+    {
+        int countWeatherForecasts = await countUseCase.ExecuteAsync();
+
+        return Ok(countWeatherForecasts);
     }
 }

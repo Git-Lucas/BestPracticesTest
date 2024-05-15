@@ -1,13 +1,14 @@
 ﻿using BestPracticesTest.Data;
 using BestPracticesTest.Entities;
+using BestPracticesTest.UseCases;
 
 namespace BestPracticesTest.Services;
 
-public class WeatherForecastService(IWeatherForecastRepository weatherForecastRepository) : IWeatherForecastService
+public class CreateRangeUseCase(IWeatherForecastRepository weatherForecastRepository) : ICreateRangeUseCase
 {
     private readonly IWeatherForecastRepository _weatherForecastRepository = weatherForecastRepository;
 
-    public async Task<int[]> CreateRangeAsync()
+    public async Task<int[]> ExecuteAsync()
     {
         string[] summaries =
         [
@@ -19,18 +20,10 @@ public class WeatherForecastService(IWeatherForecastRepository weatherForecastRe
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             TemperatureC = Random.Shared.Next(-20, 55),
             Summary = summaries[Random.Shared.Next(summaries.Length)]
-        })
-            .ToArray();
+        }).ToArray();
 
         int[] idsFromDatabase = await _weatherForecastRepository.CreateRangeAsync(weatherForecasts);
 
         return idsFromDatabase;
-    }
-
-    public async Task<IEnumerable<WeatherForecast>> GetAllAsync()
-    {
-        IEnumerable<WeatherForecast> weatherForecasts = await _weatherForecastRepository.GetAllAsync();
-
-        return weatherForecasts;
     }
 }
